@@ -1,5 +1,7 @@
 // https://leetcode.com/problems/maximum-subarray/submissions/
 
+// maxSubArray[i] =max(maxSubArray[i], (maxSubArray[i - 1] > 0 ? maxSubArray[i - 1] : 0) + nums[i])
+
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
