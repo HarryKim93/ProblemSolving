@@ -27,7 +27,6 @@ public:
                     ans = evenr - evenl + 1 - 2;
                     mxl = evenl + 1, mxr = evenr - 1;
                 }
-                ans = max(ans, evenr - evenl + 1 - 2);
             }
 
             oddl = oddr = i;
@@ -42,7 +41,7 @@ public:
                 mxl = oddl + 1, mxr = oddr - 1;
             }
         }
-        
+
         return move(s.substr(mxl, mxr - mxl + 1));
     }
 };
