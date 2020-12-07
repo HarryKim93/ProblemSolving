@@ -73,13 +73,11 @@ public:
         if (umap.find(key) != umap.end()) {
             node = umap[key];
             update(node, value);
-        }
-        else if (capacity == umap.size()) {
+        } else if (capacity == umap.size()) {
             node = new Node(key, value);
             push(node);
             LRUremove();
-        }
-        else {
+        } else {
             node = new Node(key, value);
             push(node);
         }
