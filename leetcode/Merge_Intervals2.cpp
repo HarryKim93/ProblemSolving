@@ -2,19 +2,17 @@
 // O(N * log(N))
 
 class Solution {
-public:    
-    vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        vector<vector<int>> ans;
-        sort(intervals.begin(), intervals.end(), [](vector<int>& a, vector<int>& b){ return a[0] < b[0]; });
+public:
+    bool isPalindrome(int x) {
+        if (x < 0 || x % 10 == 0 && x != 0) return false;
         
-        ans.push_back(intervals[0]);
-        for (int i = 1; i < intervals.size(); i++) {
-            if (intervals[i][0] <= ans.back()[1]) {
-                if (intervals[i][1] > ans.back()[1]) ans.back()[1] = intervals[i][1];
-            }
-            else ans.push_back(intervals[i]);
-        }
+        int y = 0;
 
-        return ans;
+        while (y < x) {
+            y = y*10 + (x % 10);
+            x  = x / 10;
+        }
+     
+        return x == y || y / 10 == x;
     }
 };
