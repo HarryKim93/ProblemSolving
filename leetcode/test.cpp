@@ -47,12 +47,23 @@ int underBound(vector<int>& nums, int threshold) {
     return mid;
 }
 
+vector<bool> canMakePaliQueries(string s, vector<vector<int>>& queries) {
+    int mask = 0;
+    vector<int> ps(1);
+    for (char c : s)
+        ps.push_back(mask ^= 1 << (c - 'a'));
+
+    vector<bool> r;
+    for (auto &q : queries) {
+        int odds = __builtin_popcount(ps[q[1] + 1] ^ ps[q[0]]);
+        r.push_back(q[2] >= odds / 2);
+    }
+    return r;
+}
+
 int main ()
 {
-    int n;
-    vector<int> nums = {0,2,4,6,8,10,12};
-    cin >> n;
-    cout << upperBound(nums, n);
-
+    vector<string> p(2);
+    cout << p[1] << "\n";
     return 0;
 }
