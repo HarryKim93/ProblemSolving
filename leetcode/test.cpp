@@ -63,7 +63,8 @@ vector<bool> canMakePaliQueries(string s, vector<vector<int>>& queries) {
 
 int main ()
 {
-    vector<string> p(2);
-    cout << p[1] << "\n";
+    string w(3, 'w');
+    w[2] = -1;
+    cout << w << "\n";
     return 0;
 }

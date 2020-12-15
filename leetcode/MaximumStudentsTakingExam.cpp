@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <algorithm>
+#include <map>
+#include <queue>
+#include <string>
 
 using namespace std;
 
@@ -53,6 +56,100 @@ public:
         
 		// the answer is the maximum among all f[m][mask]
         return *max_element(f[m].begin(), f[m].end());
+    }
+};
+
+class Solution2 {
+public:
+    vector<int>locations;//To store non-broken seats in each row as a bitmask
+    int m,n;
+    vector<vector<int>>memo;
+    int dp(vector<vector<char>>& seats,int height,int prevRowArrangement){
+        if(height>=m )return 0;
+        if(memo[height][prevRowArrangement]!=-1) return memo[height][prevRowArrangement];
+
+        int ans=0;
+        
+        for(int i=0; i<(1<<n); ++i){
+            if( ( (locations[height]&i)==i) && !(i&(i<<1)) && !(i&(i>>1)) ){
+                //Students should sit on non-broken seats and no student should sit adjacent to each other. Refer to the tutorial for more understanding
+                if(height>0){
+                    if(i & (prevRowArrangement<<1)) continue; //for any student, no other student should sit on NorthEast
+                    if(i & (prevRowArrangement>>1)) continue; //for any student, no other student should sit on NorthWest
+                }
+                ans = max(ans,dp(seats, height+1, i) + __builtin_popcount(i));
+            }
+        }
+
+        return memo[height][prevRowArrangement]=ans;
+    }
+
+    int maxStudents(vector<vector<char>>& seats) {
+        m=seats.size();
+        if(!m) return 0;
+        locations.clear();
+        n=seats.front().size();
+        for(int i=0;i<m;i++){
+            int res=0;
+            for(int j=0;j<n;++j){
+                res=2*res+(seats[i][j]=='.');
+            }
+            locations.push_back(res); 
+        }
+        
+        memo.assign(m,vector<int>(1<<n,-1));
+        
+        return dp(seats,0,0);
+    }
+};
+
+class Solution3 {
+public:
+    int maxnum = 0;
+    map<string, int> scnt;
+    queue<string> q;
+
+    void dfs(string& pre,string& cur, vector<char>& seat, int pos, int cnt) {
+        if(pos>=seat.size())
+        {
+            maxnum = max(maxnum,cnt);
+            if(scnt.count(cur) == 0)  q.push(cur);
+            scnt[cur] = max(scnt[cur],cnt);
+            return;
+        }
+
+        if(seat[pos]!='#'&& (pos == 0 || pre[pos-1]!='@') && ((pos == seat.size()-1) || pre[pos+1] != '@'))
+        {
+            cur[pos]='@';       
+            dfs(pre, cur, seat, pos+2, cnt+1); 
+        }
+
+        cur[pos]='#';       
+        dfs(pre, cur, seat, pos+1, cnt); 
+    }
+    
+    int maxStudents(vector<vector<char>>& seats) {
+        int n = seats[0].size();
+        string s(n+1, '#');
+        
+        s[n] = -1;  //row info
+        scnt[s] = 0;
+        q.push(s);
+
+        while (!q.empty()) {
+            auto pre = q.front(); 
+            q.pop();
+
+            if(pre[n]==seats.size()-1) 
+                break;
+            
+            string cur = string(n+1,'#');
+            cur[n] = pre[n]+1;
+            
+            dfs(pre, cur, seats[cur[n]], 0, scnt[pre]);
+        }
+
+        return maxnum;
     }
 };
 
