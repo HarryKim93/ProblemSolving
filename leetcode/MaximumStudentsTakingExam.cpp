@@ -146,6 +146,7 @@ public:
             string cur = string(n+1,'#');
             cur[n] = pre[n]+1;
             
+
             dfs(pre, cur, seats[cur[n]], 0, scnt[pre]);
         }
 
