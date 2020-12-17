@@ -5,65 +5,31 @@ class Solution {
 public:
     int minInsertions(string s) {
         if (s.length() == 1) return 0;
-        else {
-            int searchLen = s.length() - 1;
-            string strL = s; 
-            string strR = s;
+        else {    
+            string s2 = s;
+            reverse(s2.begin(), s2.end());
             
-            int num = s.length() / 2;
+            int len = s.length() / 2 + 1, len2 = s2.length() / 2 + 1;
+            vector<vector<int>> table(len + 1, vector<int>(len2 + 1, 0));
             
-            for (int i = 0; i < num; i++) {
-                swap(strR[i], strR[searchLen - i]);    
+            int ans = 0;
+            int ret = 0;
+            
+            for (int i = 1; i <= len; i++) {
+                for (int j = 1; j <= len2; j++) {
+                    if (s[i - 1] == s2[j - 1]) 
+                        table[i][j] = table[i - 1][j - 1] + 1;
+                    else 
+                        table[i][j] = max(table[i - 1][j], table[i][j - 1]); 
+                    
+                    ret = table[i][j] * 2;
+                    if (j == len2) ret--;
+                    ans = max(ans, ret);
+                }
+                len2--;
             }
-            
-            int beforeMap[26];
-            int afterMapR[26];
-            int afterMapL[26];
-            
-            memset(beforeMap, 0, 26);
-            memset(afterMapR, 0, 26);
-            memset(afterMapL, 0, 26);
-            
-            beforeMap[s[searchLen] - 'a'] = 1;
-            beforeMap[s[0] - 'a'] = 1;
-            afterMapR[s[0] - 'a'] = 1;
-            afterMapL[s[searchLen] - 'a'] = 1;
-            
-            for (int i = 1; i < searchLen; i++) {
-                beforeMap[s[i] - 'a']++;
-                afterMapR[s[i] - 'a'] += 2;
-                afterMapL[s[i] - 'a'] += 2;
-                
-                strR.push_back(s[i]);
-                strL.push_back(s[searchLen - i]);
-            }
-            
-            afterMapR[s[searchLen] - 'a']++;
-            strR.push_back(s[searchLen]);
-            afterMapL[s[0] - 'a']++;
-            strL.push_back(s[0]);
-            
-            int left = searchLen - 1, right = searchLen;
-            while (afterMapL[strL[left] - 'a'] - 1 >= beforeMap[strL[left] - 'a'] && afterMapL[strL[right] - 'a'] - 1 >= beforeMap[strL[right] - 'a']) {
-                afterMapL[strL[left] - 'a']--;
-                afterMapL[strL[right] - 'a']--;
-                left--;
-                right++;
-            }
-            
-            int L = (strL.length() - (right - left - 1)) - s.length();
-            
-            left = searchLen - 1, right = searchLen;
-            while (afterMapR[strR[left] - 'a'] - 1 >= beforeMap[strR[left] - 'a'] && afterMapR[strR[right] - 'a'] - 1 >= beforeMap[strR[right] - 'a']) {
-                afterMapR[strR[left] - 'a']--;
-                afterMapR[strR[right] - 'a']--;
-                left--;
-                right++;
-            }
-            
-            int R = (strR.length() - (right - left - 1)) - s.length();
-            
-            return min(L, R);
+
+            return len - ans;
         }
     }
 };
