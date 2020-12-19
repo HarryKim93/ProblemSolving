@@ -5,7 +5,7 @@
 #include <vector>
 
 using namespace std;
-
+L
 class Solution {
 public:
     vector<int> runningSum(vector<int>& nums) {
