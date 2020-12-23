@@ -1,52 +1,79 @@
 class Solution {
 public:
-    bool isMatch(string s, string p) {        
-        int i = 0, j = 0;
-        int sLen = s.length() - 1;
-        int pLen = p.length() - 1;
-        
-        if (sLen > 0 && p.length() == 0) return false;
-        
-        while (sLen >= 0 && pLen >= 0 && s[sLen] == p[pLen]) {
-            sLen--;
-            pLen--;
-        }
-        
-        sLen++;
-        pLen++;
-        
-        
-        cout << sLen << " " << pLen << "\n";
-        
-        auto isAlpha = [](char ch) {return 0 <= ch - 'a' && ch - 'a' < 26;};
-        while (i < sLen && j < pLen) {
-            if (j + 1 < pLen && p[j + 1] == '*') {
-                j++;
-                continue;
+    void RefineString(string& target, string& source) {
+        char repeatCh = '-';
+        int pLen = source.length();
+        for (int i = 0; i < pLen; i++) {
+            if (source[i] == '*') {
+                repeatCh = source[i - 1];
             } else {
-                if (p[j] == '*') {
-                    if (p[j - 1] == '.') {
-                        if (j + 1 == pLen) return true;
-                        else 
-                            while (i < pLen && p[j + 1] == s[i]) i++;
-                    }
-                    else {
-                        while (i < pLen && p[j - 1] == s[i]) i++;
-                    }
-                    j++;
-                }
-                else if (p[j] == '.') {
-                    j++;
-                    i++;
-                }
+                if (repeatCh == source[i]) continue;
                 else {
-                    if (s[i] == p[j]) i++;
-                    j++;
+                    repeatCh = '-';
+                    target.push_back(source[i]);
                 }
             }
         }
+    }
+    
+    void RefineBack(string& target, string& source) {
+        while (target.length() > 0 && source.length() > 0) {
+            if (target.back() == source.back() || (target.back() == '.')) {
+                target.pop_back();
+                source.pop_back();
+            } else {
+                if (target.back() == '*') {
+                    if (target[target.length() - 2] == '.') break;
+                    if (target[target.length() - 2] == source.back()) { 
+                        while (source.length() > 0 && target[target.length() - 2] == source.back()) source.pop_back();
+                    }
+                    target.pop_back();
+                    target.pop_back();
+                } 
+            }
+        }
+    }
+    
+    bool isMatch(string s, string p) {
+        string newP;
         
-        cout << i << " " << j << "\n";
-        return i == sLen && j == pLen;
+        RefineString(newP, p);
+        RefineBack(newP, s);
+        
+        // Edge Point
+        if (s.length() == 0) {
+            if (p.length() == 0) return true;
+            else {
+                int newPlen = newP.length();
+                int k = 0;
+                
+                while (k < newPlen) {
+                    if (k + 1 < newPlen && newP[k + 1] == '*') k += 2;
+                    else break;
+                }
+                
+                return k == newPlen;
+            }
+        } else {
+            int sLen = s.length(), pLen = newP.length();
+            int i = 0, j = 0;
+            while (i < sLen && j < pLen) {
+                if (s[i] == newP[j] || newP[j] == '.') {
+                    if (j + 1 < pLen && newP[j + 1] == '*') {
+                        if (newP[j] == '.') return true;
+                        while (i < sLen && s[i] == newP[j]) i++;
+                        j += 2;
+                    } else {
+                        i++;
+                        j++;
+                    }
+                } else {
+                    if (j + 1 < pLen && newP[j + 1] == '*') j += 2;
+                    else return false;
+                }
+            }
+            
+            return i == sLen && j == pLen;
+        }
     }
 };
