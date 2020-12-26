@@ -1,28 +1,25 @@
 // https://leetcode.com/problems/dot-product-of-two-sparse-vectors/submissions/
 // O(N)
 
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+using namespace std;
+
 class SparseVector {
-private:
-    vector<int> container;
 public:
-    SparseVector(vector<int> &nums) {
-        container = move(nums);
+    vector<int> v, n;
+    SparseVector(vector<int> &nums, int i = 0) : n(nums) {
+        for_each(begin(n), end(n), [&](int k) { if (k) v.push_back(i); ++i; });
     }
-    
-    int getValue(int idx) {
-        return container[idx];
-    }
-    
-    // Return the dotProduct of two sparse vectors
-    int dotProduct(SparseVector& vec) {
-        int ans = 0;
-        for (int i = 0; i < container.size(); i++) {
-            ans += vec.getValue(i) * container[i]; 
-        }
-        
-        return ans;
+    int dotProduct(SparseVector& vec, vector<int> res = {}) {
+        transform(begin(v), end(v), begin(vec.v), end(vec.v), back_inserter(res));
+        return accumulate(begin(res), end(res), 0, [&](int s, int i) { return s + n[i] * vec.n[i]; });
     }
 };
+
+
 
 // Your SparseVector object will be instantiated and called as such:
 // SparseVector v1(nums1);
