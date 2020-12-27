@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -63,8 +60,11 @@ vector<bool> canMakePaliQueries(string s, vector<vector<int>>& queries) {
 
 int main ()
 {
-    string w(3, 'w');
-    w[2] = -1;
-    cout << w << "\n";
-    return 0;
+    vector<int> vec{1,2,3,4,5,6,7,8};
+
+    string a = "1234";
+    cout << a[a.length()] << "\n";
+    // char a = 1;
+    // a <<= 7;
+    // cout << (int)a << "\n";
 }
