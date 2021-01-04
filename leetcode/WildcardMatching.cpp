@@ -53,6 +53,31 @@ public:
         
         return matching(0, 0);
     }
-    
+};
 
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        const int sLen = s.length();
+        const int pLen = p.length();
+        
+        bool dp[sLen + 1][pLen + 1];
+        for (int i = 0; i <= sLen; i++)
+            memset(dp[i], false, pLen + 1);
+        
+        dp[sLen][pLen] = true;
+        
+        for (int i = sLen; i >= 0; i--) {
+            for (int j = pLen - 1; j >= 0; j--) {
+                bool first_match = (p[j] == s[i]) || (p[j] == '?');
+                if (p[j] == '*') {
+                    dp[i][j] = dp[i + 1][j] || dp[i][j + 1];
+                } else {
+                    dp[i][j] = first_match && dp[i + 1][j + 1];   
+                }
+            }
+        }
+        
+        return dp[0][0];
+    }
 };
