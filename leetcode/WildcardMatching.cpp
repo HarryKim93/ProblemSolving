@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/wildcard-matching/submissions/
-// O(S * P)
+// O(2^(min(S, P / 2))) or O(S * P)
 
 class Solution {
 public:
@@ -13,42 +13,27 @@ public:
     };
     
     bool isMatch(string s, string p) {
-//         if (s.empty()) {
-//             if (p.empty()) return true;
-//             return p[0] == '*' && isMatch(s, p.substr(1));
-//         } 
-        
-//         if (p[0] == '*') {
-//             return isMatch(s, p.substr(1)) || isMatch(s.substr(1), p);
-//         } else {
-//             bool first_match = (p[0] == s[0] || p[0] == '?');
-//             return first_match && isMatch(s.substr(1), p.substr(1));
-//         }
-//         return isMatch(s.substr(1), p.substr(1));
-        
         unordered_map<pair<int, int>, bool, hash_pair> dp;
         
         function<bool(int, int)> matching = [&](int i, int j) {
+            bool ans = false;
+            bool first_match = false;
+            
             if (dp.find(make_pair(i, j)) == dp.end()) {
-                bool ans = false;
-                
-                if (i == s.length()) {
-                    if (j == p.length()) return true;
-                    return p[j] == '*' && matching(i, j + 1);
-                }
-                
-                if (p[0] == '*') {
-                    ans = matching(i, j + 1) || matching(i + 1, j);
-                } else {
-                    bool first_match = (p[j] == s[i]) || (p[j] == '?');
-                    ans = first_match && matching(i + 1, j + 1);
+                if (j == p.length()) ans = (i == s.length());
+                else {
+                    first_match = (p[j] == s[i]) || (p[j] == '?');
+                    if (p[j] == '*') {
+                        ans = matching(i, j + 1) || (i < s.length() && matching(i + 1, j));
+                    } else {
+                        ans = first_match && matching(i + 1, j + 1);
+                    }
                 }
                 
                 dp[make_pair(i, j)] = ans;
-                return ans;
-            } else {
-                return dp[make_pair(i, j)];
-            }
+            } 
+            
+            return dp[make_pair(i, j)];
         };
         
         return matching(0, 0);
@@ -62,22 +47,69 @@ public:
         const int pLen = p.length();
         
         bool dp[sLen + 1][pLen + 1];
-        for (int i = 0; i <= sLen; i++)
-            memset(dp[i], false, pLen + 1);
+        for (int i = 0; i <= sLen; i++) memset(dp[i], false, pLen + 1);
         
         dp[sLen][pLen] = true;
-        
         for (int i = sLen; i >= 0; i--) {
             for (int j = pLen - 1; j >= 0; j--) {
-                bool first_match = (p[j] == s[i]) || (p[j] == '?');
-                if (p[j] == '*') {
-                    dp[i][j] = dp[i + 1][j] || dp[i][j + 1];
-                } else {
+                bool first_match = i < sLen && (p[j] == s[i] || p[j] == '?');
+                
+                if (p[j] == '*') 
+                    dp[i][j] = (i < sLen && dp[i + 1][j]) || dp[i][j + 1];
+                else 
                     dp[i][j] = first_match && dp[i + 1][j + 1];   
+                
+            }
+        }
+        return dp[0][0];
+    }
+};
+
+class Solution {
+public:
+    void cleanUp(string& p) {
+        string newStr = "";
+        if (p.length() != 0) {
+            char prev = p[0];
+            newStr.push_back(prev);
+            for (int i = 1; i < p.length(); i++) {
+                if (p[i] == '*' && p[i] == prev) continue;
+                else {
+                    newStr.push_back(move(p[i]));
+                    prev = p[i];
                 }
             }
         }
         
-        return dp[0][0];
+        p = move(newStr);
     }
+    
+    bool isMatch(string s, string p) {
+        cleanUp(p);
+        
+        char dp[s.length() + 1][p.length() + 1];
+        for (int i = 0; i <= s.length(); i++) for (int j = 0; j <= p.length(); j++) dp[i][j] = -1;    
+        
+        function<bool(int, int)> matching = [&](int i, int j) {
+            bool first_match = false;
+            
+            if (dp[i][j] == -1) {
+                if (j == p.length()) return dp[i][j] = (i == s.length());
+                else {
+                    if (p[j] == '*') {
+                        return dp[i][j] = (i < s.length() && matching(i + 1, j)) || matching(i, j + 1);
+                    } else {
+                        first_match = i < s.length() && (p[j] == s[i] || p[j] == '?');
+                        return dp[i][j] = first_match && matching(i + 1, j + 1);
+                    }
+                }
+            } 
+            
+            return dp[i][j];
+        };
+        
+        return matching(0, 0);
+    }
+    
+
 };
