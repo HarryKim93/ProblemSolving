@@ -110,6 +110,34 @@ public:
         
         return matching(0, 0);
     }
-    
+};
 
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        short s_idx = 0, p_idx = 0;
+        short star_idx = -1, s_tmp_idx = -1;
+        short sLen = s.length(), pLen = p.length();
+        
+        while (s_idx < sLen) {
+            if (p[p_idx] == s[s_idx] || p[p_idx] == '?') {
+                s_idx++;
+                p_idx++;
+            } else if (p[p_idx] == '*') {
+                s_tmp_idx = s_idx;
+                star_idx = p_idx;
+                p_idx++;
+            } else if(star_idx == -1){
+                return false;
+            } else {
+                s_idx = s_tmp_idx + 1;
+                s_tmp_idx = s_idx;
+                p_idx = star_idx + 1;
+            }
+        }
+        
+        for (auto ch : p.substr(p_idx))
+            if (ch != '*') return false;
+        return true;
+    }
 };
