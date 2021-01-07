@@ -63,6 +63,7 @@ int main ()
     vector<int> vec{1,2,3,4,5,6,7,8};
 
     string a = "1234";
+    a.insert(0, to_string('2'));
     cout << a[a.length()] << "\n";
     // char a = 1;
     // a <<= 7;
