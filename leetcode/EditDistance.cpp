@@ -32,6 +32,7 @@ public:
             dp[idx1][idx2] = oper;
             return ans;
         };
+    }
         
         struct node {
             int idx1, idx2;
@@ -58,5 +59,44 @@ public:
         }
         
         return func(0, 0, 0);
+    }
+};
+
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        if (word1.length() == 0) return word2.length();
+        if (word2.length() == 0) return word1.length();
+        
+        int dp[word1.length() + 1][word2.length() + 1];
+        for (int i = 0; i <= word1.length(); i++) for (int j = 0; j <= word2.length(); j++) dp[i][j] = INT_MAX - 1;
+
+        int word1Len = word1.length(), word2Len = word2.length();
+        
+        dp[0][0] = 0;
+        bool check = true;
+        
+        for (int i = 0; i < word1Len; i++) {
+            for (int j = 0; j < word2Len; j++) {
+                if (word1[i] == word2[j]) {
+                    dp[i + 1][j + 1] = min<int>(dp[i + 1][j + 1], dp[i][j]);
+                } else {
+                    dp[i + 1][j] = min<int>(dp[i + 1][j], dp[i][j] + 1);
+                    dp[i][j + 1] = min<int>(dp[i][j + 1], dp[i][j] + 1);
+                    dp[i + 1][j + 1] = min<int>(dp[i + 1][j + 1], dp[i][j] + 1);
+                }
+            }
+        }
+        
+        for (int i = 0; i < word1Len; i++) {
+            if (dp[i][word2.length()] == INT_MAX - 1) continue;
+            dp[word1.length()][word2.length()] = min<int>(dp[word1.length()][word2.length()], dp[i][word2.length()] + (word1.length() - i));
+        }
+        for (int j = 0; j < word2Len; j++) {
+            if (dp[word1.length()][j] == INT_MAX - 1) continue;
+            dp[word1.length()][word2.length()] = min<int>(dp[word1.length()][word2.length()], dp[word1.length()][j] + (word2.length() - j));
+        }
+        
+        return dp[word1.length()][word2.length()];
     }
 };
