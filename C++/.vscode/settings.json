@@ -46,6 +46,8 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xutility": "cpp",
-        "mutex": "cpp"
+        "mutex": "cpp",
+        "fstream": "cpp",
+        "string_view": "cpp"
     }
 }
