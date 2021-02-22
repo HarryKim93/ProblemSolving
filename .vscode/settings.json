@@ -1,5 +1,6 @@
 {
     "files.associations": {
+<<<<<<< HEAD
         "xstring": "cpp",
         "iostream": "cpp",
         "vector": "cpp",
@@ -26,5 +27,11 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xutility": "cpp"
+=======
+        "*.cpp": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "ostream": "cpp"
+>>>>>>> origin/master
     }
 }

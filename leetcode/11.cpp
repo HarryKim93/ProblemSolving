@@ -1,24 +1,20 @@
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <tuple>
-
-using namespace std;
+// Time: O(N), Space: O
 
 class Solution {
 public:
     int maxArea(vector<int>& height) {
-        unordered_map<int, set<int> > umap;
+        int ans = 0;
+        int left = 0, right = height.size() - 1;
         
-        for (const auto& h : height) {
-            umap[h].
+        while (left != right) {
+            ans = max(ans, (right - left) * min<int>(height[left], height[right]));
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
         }
+        
+        return ans;
     }
 };
-
-int main()
-{
-    int c = 1, d = 2;
-    auto& [a, b] = tie(c, d);
-}
-
