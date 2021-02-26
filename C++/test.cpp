@@ -38,25 +38,32 @@ struct KeepApart
  
 int main()
 {
-    std::cout
-        << "hardware_destructive_interference_size == "
-        << hardware_destructive_interference_size << '\n'
-        << "hardware_constructive_interference_size == "
-        << hardware_constructive_interference_size << '\n'
-        << "sizeof( std::max_align_t ) == " << sizeof(std::max_align_t) << "\n\n";
+    int&& a = 6;
+
+    a += 5;
+    std::cout << a << "\n";
+
+    // std::cout
+    //     << "hardware_destructive_interference_size == "
+    //     << hardware_destructive_interference_size << '\n'
+    //     << "hardware_constructive_interference_size == "
+    //     << hardware_constructive_interference_size << '\n'
+    //     << "sizeof( std::max_align_t ) == " << sizeof(std::max_align_t) << "\n\n";
  
-    std::cout
-        << "offsetof( DataPack::port ) : " << offsetof(DataPack, port) << '\n'
-        << "offsetof( DataPack::pack ) : " << offsetof(DataPack, pack) << '\n'
-        << "offsetof( DataPack::wait ) : " << offsetof(DataPack, wait) << '\n'
-        << "sizeof  ( DataPack )       : " << sizeof(DataPack)         << '\n'
-        << '\n';
+    // std::cout
+    //     << "offsetof( DataPack::port ) : " << offsetof(DataPack, port) << '\n'
+    //     << "offsetof( DataPack::pack ) : " << offsetof(DataPack, pack) << '\n'
+    //     << "offsetof( DataPack::wait ) : " << offsetof(DataPack, wait) << '\n'
+    //     << "sizeof  ( DataPack )       : " << sizeof(DataPack)         << '\n'
+    //     << '\n';
  
-    std::cout
-        << "offsetof( KeepApart::air  ) : " << offsetof(KeepApart, air)  << '\n'
-        << "offsetof( KeepApart::ice  ) ! " << offsetof(KeepApart, ice)  << '\n'
-        << "offsetof( KeepApart::fire ) ! " << offsetof(KeepApart, fire) << '\n'
-        << "offsetof( KeepApart::soil ) : " << offsetof(KeepApart, soil) << '\n'
-        << "sizeof  ( KeepApart )       : " << sizeof(KeepApart)         << '\n'
-        << '\n';
+    // std::cout
+    //     << "offsetof( KeepApart::air  ) : " << offsetof(KeepApart, air)  << '\n'
+    //     << "offsetof( KeepApart::ice  ) ! " << offsetof(KeepApart, ice)  << '\n'
+    //     << "offsetof( KeepApart::fire ) ! " << offsetof(KeepApart, fire) << '\n'
+    //     << "offsetof( KeepApart::soil ) : " << offsetof(KeepApart, soil) << '\n'
+    //     << "sizeof  ( KeepApart )       : " << sizeof(KeepApart)         << '\n'
+    //     << '\n';
+
+    return 0;
 }
