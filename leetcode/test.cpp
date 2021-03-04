@@ -1,73 +1,63 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+#include <string>
 
 using namespace std;
 
-int upperBound(vector<int>& nums, int threshold) {
-    int left = 0, right = nums.size();
-    int mid = (left + right) / 2;
-    int sum = 0;
-    
-    while (left < right) {
-        if (nums[mid] == threshold) {
-            return mid;
+int main() {
+    vector<int> vec{1,4,7,9,11};
+    // cout << binary_search(vec.begin(), vec.end(), 7);
+    auto binary_search = [vec](int start, int end, int value) {
+        int left = start, right = end;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (vec[mid] == value) {
+                return mid;
+            } else if (vec[mid] < value) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
         }
-        else if (nums[mid] < threshold) {
-            left = mid + 1;
+
+        return -1;
+    };
+
+    auto upper_bound = [vec](int start, int end, int value) {
+        int left = start, right = end;
+        while (left < right) {
+            int mid = (left + right) >> 1;
+            if (vec[mid] <= value) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
         }
-        else {
-            right = mid;
+
+        return right;
+    };
+
+    auto lower_bound = [vec](int start, int end, int value) {
+        int left = start, right = end;
+        while (left < right) {
+            int mid = (left + right) >> 1;
+            if (vec[mid] < value) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
         }
-        mid = (left + right) / 2;
-    }
-    
-    return mid;
-}
 
-int underBound(vector<int>& nums, int threshold) {
-    int left = 0, right = nums.size();
-    int mid = (left + right) / 2;
-    int sum = 0;
-    
-    while (left < mid) {
-        if (nums[mid] == threshold) {
-            return mid;
-        }
-        else if (nums[mid] < threshold) {
-            left = mid;
-        }
-        else {
-            right = mid;
-        }
-        mid = (left + right) / 2;
-    }
-    
-    return mid;
-}
+        return left;
+    };
 
-vector<bool> canMakePaliQueries(string s, vector<vector<int>>& queries) {
-    int mask = 0;
-    vector<int> ps(1);
-    for (char c : s)
-        ps.push_back(mask ^= 1 << (c - 'a'));
+    // int n;
+    // cin >> n;
+    // cout << lower_bound(0, vec.size(), n);
 
-    vector<bool> r;
-    for (auto &q : queries) {
-        int odds = __builtin_popcount(ps[q[1] + 1] ^ ps[q[0]]);
-        r.push_back(q[2] >= odds / 2);
-    }
-    return r;
-}
+    string s("12345");
+    cout << s.substr(0,0);
 
-int main ()
-{
-    vector<int> vec{1,2,3,4,5,6,7,8};
-
-    string a = "1234";
-
-    cout << a.substr(3, 5);
-    a.insert(0, to_string('2'));
-    cout << a[a.length()] << "\n";
-    // char a = 1;
-    // a <<= 7;
-    // cout << (int)a << "\n";
+    return 0;
 }
